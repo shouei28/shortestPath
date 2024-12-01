@@ -65,7 +65,7 @@ export class MapViewer extends Component<MapProps, MapState> {
           <p>Loading schedule...</p>
         </div>;
 
-    } else if (this.state.schedule.length === 0) {
+    } else if (this.state.schedule.length <= 1) {
       return <div className="content">
           <p>You have not set a schedule (or it does not have any walks between classes).</p>
           <p><button onClick={this.doBackClick}>Back</button></p>
@@ -115,7 +115,9 @@ export class MapViewer extends Component<MapProps, MapState> {
       hours.push(<option value="" key="">Choose</option>);
     for (const event of this.state.schedule) {
       const hour = event.hour;
-      hours.push(<option value={hour} key={hour}>{hour}</option>)
+      if (hour !== this.state.schedule[0].hour) {
+        hours.push(<option value={hour} key={hour}>{hour}</option>)
+      }
     }
 
     return <select value={this.state.hour || ''}
@@ -194,7 +196,6 @@ export class MapViewer extends Component<MapProps, MapState> {
 
   doScheduleError = (msg: string): void => {
     console.error("error while fetching '/api/schedule', ", msg);
-    throw new Error(msg + ", check the client console!");
   }
 
   doHourChange = (evt: ChangeEvent<HTMLSelectElement>): void => {
@@ -235,7 +236,6 @@ export class MapViewer extends Component<MapProps, MapState> {
 
   doShortestPathError = (msg: string): void => {
     console.error("error while fetching '/api/shortestPath', ", msg);
-    throw new Error(msg + ", check the client console!");
   }
 
   doBackClick = (_evt: MouseEvent<HTMLButtonElement>): void => {
