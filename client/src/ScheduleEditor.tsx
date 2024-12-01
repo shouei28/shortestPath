@@ -140,7 +140,12 @@ export class ScheduleEditor extends Component<ScheduleProps, ScheduleState> {
     }
 
     const schedule = parseSchedule(data.schedule);
-    this.setState({schedule});
+    if (schedule.length !== 0) {
+      this.setState({hour: hoursAfter(schedule[schedule.length-1].hour)[0], schedule});
+    } else {
+      this.setState({schedule});
+    }
+    
   }
 
   doGetScheduleError = (msg: string): void => {

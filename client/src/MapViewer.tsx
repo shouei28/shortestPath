@@ -194,6 +194,7 @@ export class MapViewer extends Component<MapProps, MapState> {
 
   doScheduleError = (msg: string): void => {
     console.error("error while fetching '/api/schedule', ", msg);
+    throw new Error(msg + ", check the client console!");
   }
 
   doHourChange = (evt: ChangeEvent<HTMLSelectElement>): void => {
@@ -234,6 +235,7 @@ export class MapViewer extends Component<MapProps, MapState> {
 
   doShortestPathError = (msg: string): void => {
     console.error("error while fetching '/api/shortestPath', ", msg);
+    throw new Error(msg + ", check the client console!");
   }
 
   doBackClick = (_evt: MouseEvent<HTMLButtonElement>): void => {
