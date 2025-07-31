@@ -5,6 +5,7 @@ import { findPath } from './pathfinder';
 import { Friends, jsonifyFriends, parseFriends } from "./friends";
 import { indexAtHour, jsonifySchedule, parseHour, parseSchedule, Schedule } from "./schedule";
 import { Nearby } from "./nearby";
+import { buildTree, findClosestInTree } from "./location_tree";
 
 // Require type checking of request body.
 type SafeRequest = Request<ParamsDictionary, {}, Record<string, unknown>>;
@@ -177,9 +178,9 @@ export const getShortestPath = (req: SafeRequest, res: SafeResponse): void => {
       const fLocs = locationsOnPath(fPath.steps);
 
       // TODO: implement this in Task 5 (using locs and fLocs)
-
-      // Remove, just here to avoid "declared but never read" errors
-      console.log(locs, fLocs);
+      const locationTree = buildTree(fLocs);
+      const closeLocation = findClosestInTree(locationTree, locs);
+      nearby.push({friend: friend, dist: closeLocation[1], loc: closeLocation[0]});
     }
   }
 

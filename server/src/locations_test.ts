@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import {
     Location, centroid, distance, isInRegion, locationsInRegion,
-    overlap, sameLocation, sortedLocations, squaredDistance
+    overlap, sameLocation, sortedLocations, squaredDistance, distanceMoreThan
   } from './locations';
 
 
@@ -136,6 +136,36 @@ describe('locations', function() {
 
   it('distanceMoreThan', function() {
     // TODO: implement this in Task 3
+    // top
+    assert.deepStrictEqual(distanceMoreThan({ x: 6, y: 2 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 6, y: 2 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 5), false);
+    // bottom
+    assert.deepStrictEqual(distanceMoreThan({ x: 6, y: 13 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 6, y: 13 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 5), false);
+    // top left
+    assert.deepStrictEqual(distanceMoreThan({ x: 1, y: 2 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 1, y: 2 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 5), false);
+    // top right
+    assert.deepStrictEqual(distanceMoreThan({ x: 14, y: 2 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 14, y: 2 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 5), false);
+    // left
+    assert.deepStrictEqual(distanceMoreThan({ x: 1, y: 8 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 1, y: 8 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 5), false);
+    // right
+    assert.deepStrictEqual(distanceMoreThan({ x: 14, y: 8 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 14, y: 8 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 5), false);
+    // bottom left
+    assert.deepStrictEqual(distanceMoreThan({ x: 1, y: 13 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 1, y: 13 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 15), false);
+    // bottom right
+    assert.deepStrictEqual(distanceMoreThan({ x: 14, y: 13 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), true);
+    assert.deepStrictEqual(distanceMoreThan({ x: 14, y: 13 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 15), false);
+    // in
+    assert.deepStrictEqual(distanceMoreThan({ x: 8, y: 8 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), false);
+    assert.deepStrictEqual(distanceMoreThan({ x: 6, y: 9 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 15), false);
+    // on the edge
+    assert.deepStrictEqual(distanceMoreThan({ x: 8, y: 5 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 2), false);
+    assert.deepStrictEqual(distanceMoreThan({ x: 5, y: 8 }, { x1: 5, x2: 10, y1: 5, y2: 10 }, 0), false);
   });
 
   it('locationsInRegion', function() {

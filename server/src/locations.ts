@@ -107,9 +107,46 @@ export const overlap = (region1: Region, region2: Region): boolean => {
  */
 export const distanceMoreThan = (loc: Location, region: Region, dist: number): boolean => {
   // TODO: implement this in Task 3
-
-  // Remove, just here to avoid "declared but never read" errors
-  console.log(loc, region, dist);
-
+  if(loc.x >= region.x1 && loc.x <= region.x2){
+    if(loc.y > region.y2){
+      if(loc.y - region.y2 > dist){
+        return true;
+      } 
+    } else if(loc.y < region.y1){
+      if(region.y1 - loc.y > dist){
+        return true
+      }
+    }
+  } else if(loc.y >= region.y1 && loc.y <= region.y2){
+    if(loc.x > region.x2){
+      if(loc.x - region.x2 > dist){
+        return true;
+      } 
+    } else if(loc.x < region.x1){
+      if(region.x1 - loc.x > dist){
+        return true
+      }
+    }
+  } else if(loc.x > region.x2){
+    if(loc.y < region.y1){
+      if(squaredDistance(loc, {x: region.x2, y: region.y1}) > (dist * dist)){
+        return true;
+      }
+    } else if(loc.y > region.y2){
+      if(squaredDistance(loc, {x: region.x2, y: region.y2}) > (dist * dist)){
+        return true;
+      }
+    }
+  } else if(loc.x < region.x1){
+    if(loc.y < region.y1){
+      if(squaredDistance(loc, {x: region.x1, y: region.y1}) > (dist * dist)){
+        return true;
+      }
+    } else if(loc.y > region.y2){
+      if(squaredDistance(loc, {x: region.x1, y: region.y2}) > (dist * dist)){
+        return true;
+      }
+    }
+  } 
   return false;
 }

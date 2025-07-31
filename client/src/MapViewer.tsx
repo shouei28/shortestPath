@@ -3,10 +3,15 @@ import campusMap from './img/campus_map.jpg';
 import { Hour, indexAtHour, parseHour, parseSchedule, Schedule } from './schedule';
 import { Building, Edge, getBuildingByShortName, parseEdges } from './buildings';
 import { isRecord } from './record';
+import { Nearby } from './nearby';
+import { parseNearbyList } from './nearby';
 
 
 // Radius of the circles drawn for each start/end and friends.
 const RADIUS: number = 30;
+
+// Radius of the circles drawn for each nearby friends.
+const NEAR_RADIUS: number = 20;
 
 
 type MapProps = {
@@ -19,6 +24,7 @@ type MapState = {
   schedule?: Schedule;
   hour?: Hour;
   path?: Array<Edge>;
+  nearby?: Array<Nearby>;
 };
 
 
@@ -140,7 +146,13 @@ export class MapViewer extends Component<MapProps, MapState> {
       ];
 
     // TODO: add circles for each nearby friend in Task 6
-
+  if(this.state.nearby !== undefined){
+    for(const [i, friend] of this.state.nearby.entries()){
+      elems.push(<circle cx={friend.loc.x} cy={friend.loc.y} fill={FRIEND_COLORS[i]} r={NEAR_RADIUS}
+            stroke={'white'} strokeWidth={10} key={friend.friend}/>);
+    }
+  }
+    
     return elems;
   };
 
@@ -168,7 +180,11 @@ export class MapViewer extends Component<MapProps, MapState> {
     items.push(makeLegendItem('blue', `End at ${end.shortName}`, 'end'));
 
     // TODO: add a legend item for each nearby friend in Task 6
-
+    if(this.state.nearby !== undefined){
+      for(const [i, friend] of this.state.nearby.entries()){
+        items.push(makeLegendItem(FRIEND_COLORS[i], `${friend.friend} is nearby`, 'nearby'));
+      }
+    }
     return items;
   };
 
@@ -211,6 +227,7 @@ export class MapViewer extends Component<MapProps, MapState> {
 
   doShortestPathResp = (res: Response): void => {
     if (res.status !== 200) {
+      console.log("if of doshort");
       res.text()
         .then((msg) => this.doShortestPathError(`bad status code ${res.status}: ${msg}`))
         .catch(() => this.doShortestPathError("Failed to parse error response message"));
@@ -231,6 +248,7 @@ export class MapViewer extends Component<MapProps, MapState> {
       // TODO: parse & record the nearby points in the state in Task 6
       this.setState({
         path: parseEdges(data.path),
+        nearby: parseNearbyList(data.nearby)
       });
   }
 
@@ -261,6 +279,6 @@ const makeLegendItem = (color: string, desc: string, key: string): JSX.Element =
 
 /** List of colors to use for nearby friends. */
 // TODO: uncomment this in Task 6
-//const FRIEND_COLORS: Array<string> = [
-//    "#F0BC68", "#C4D7D1", "#F5D1C3", "#FFB6A3", "#B8C6D9", "#8596A6",
-//  ];
+const FRIEND_COLORS: Array<string> = [
+   "#F0BC68", "#C4D7D1", "#F5D1C3", "#FFB6A3", "#B8C6D9", "#8596A6",
+ ];
